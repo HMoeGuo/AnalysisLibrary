@@ -5,11 +5,33 @@ using System.Text;
 
 namespace AnalysisLibrary
 {
-    class PortableExecutableStruct
+    public class PortableExecutableStruct
     {
+        /// <summary>
+        /// MAGIC Type
+        /// </summary>
         public readonly static ushort IMAGE_ROM_OPTIONAL_HDR_MAGIC = 0x107;
         public readonly static ushort IMAGE_NT_OPTIONAL_HDR32_MAGIC = 0x10b;
         public readonly static ushort IMAGE_NT_OPTIONAL_HDR64_MAGIC = 0x20b;
+        /// <summary>
+        ///  Directory Entries
+        /// </summary>
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_EXPORT = 0;   // Export Directory
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_IMPORT = 1;  // Import Directory
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_RESOURCE = 2; // Resource Directory
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_EXCEPTION = 3;  // Exception Directory
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_SECURITY = 4;  // Security Directory
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_BASERELOC = 5;  // Base Relocation Table
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_DEBUG = 6;  // Debug Directory
+        //IMAGE_DIRECTORY_ENTRY_COPYRIGHT       7   // (X86 usage)
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_ARCHITECTURE = 7; // Architecture Specific Data
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_GLOBALPTR = 8; // RVA of GP
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_TLS = 9; // TLS Directory
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG = 10; // Load Configuration Directory
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT = 11; // Bound Import Directory in headers
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_IAT = 12; // Import Address Table
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT = 13; // Delay Load Import Descriptors
+        public readonly static ushort IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR = 14; // COM Runtime descriptor
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct _IMAGE_DOS_HEADER
         {
@@ -114,15 +136,12 @@ namespace AnalysisLibrary
             public uint LoaderFlags;
             public uint NumberOfRvaAndSizes;
         }
-
-
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct _IMAGE_DATA_DIRECTORY
         {
             public uint VirtualAddress;
             public uint Size;
         }
-
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct _IMAGE_NT_HEADERS32
         {
@@ -130,7 +149,6 @@ namespace AnalysisLibrary
             public _IMAGE_FILE_HEADER FileHeader;
             public _IMAGE_OPTIONAL_HEADER32 OptionalHeader;
         }
-
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct _IMAGE_NT_HEADERS64
         {
@@ -138,21 +156,54 @@ namespace AnalysisLibrary
             public _IMAGE_FILE_HEADER FileHeader;
             public _IMAGE_OPTIONAL_HEADER64 OptionalHeader;
         }
-
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct _IMAGE_SECTION_HEADER
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
-            public char[] Name;
-            public uint Misc;
-            uint VirtualAddress;
-            uint SizeOfRawData;
-            uint PointerToRawData;
-            uint PointerToRelocations;
-            uint PointerToLinenumbers;
-            ushort NumberOfRelocations;
-            ushort NumberOfLinenumbers;
-            uint Characteristics;
+            public byte[] Name;
+            public uint Misc;//VirtualSize PhysicalAddress
+            public uint VirtualAddress;
+            public uint SizeOfRawData;
+            public uint PointerToRawData;
+            public uint PointerToRelocations;
+            public uint PointerToLinenumbers;
+            public ushort NumberOfRelocations;
+            public ushort NumberOfLinenumbers;
+            public uint Characteristics;
+        }
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct _IMAGE_EXPORT_DIRECTORY
+        {
+            public uint Characteristics;
+            public uint TimeDateStamp;
+            public ushort MajorVersion;
+            public ushort MinorVersion;
+            public uint Name;
+            public uint Base;
+            public uint NumberOfFunctions;
+            public uint NumberOfNames;
+            public uint AddressOfFunctions;
+            public uint AddressOfNames;
+            public uint AddressOfNameOrdinals;
+        }
+        public struct _IMAGE_EXPORT_DIRECTORY_LIST
+        {
+            public _IMAGE_EXPORT_DIRECTORY IMAGE_EXPORT_DIRECTORY;
+            public uint[] FunctionsAddressList;
+            public uint[] NameAddressList;
+            public ushort[] NameOrdinalsList;
+        }
+        public struct _EXPORT_FUNCTION
+        {
+            public uint Ordinal;
+            public uint RVAAddressOfFunctions;
+            public uint RVAAddressOfNames;
+            public uint RVAAddressOfNameOrdinals;
+            public uint AddressOfFunctions;
+            public uint AddressOfNames;
+            public uint AddressOfNameOrdinals;
+            public string FunctionName;
+
         }
 
     }

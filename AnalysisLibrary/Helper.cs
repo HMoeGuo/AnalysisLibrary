@@ -51,5 +51,17 @@ namespace AnalysisLibrary
                 Marshal.FreeHGlobal(buffer);
             }
         }
+
+        public static string ReadString(byte[] bytes, int startIndex, int max = 500)
+        {
+            int i = 0;
+            while (bytes[startIndex + i] != 0x0 && max > i)
+            {
+                i++;
+            }
+            if (i == 0)
+                return string.Empty;
+            return Encoding.UTF8.GetString(bytes, startIndex, i);
+        }
     }
 }
