@@ -67,8 +67,10 @@ namespace AnalysisLibrary
             IMAGE_NT_HEADERS64 = Helper.BytesToStruct<_IMAGE_NT_HEADERS64>(_imageDataStream, IMAGE_DOS_HEADER.e_lfanew);
             //Init IMAGE_DATA_DIRECTORY
             int nowPoint = 0;
+            UInt64 imageBaseOffset = 0x0;
             if (IsHDR32)
             {
+                imageBaseOffset = IMAGE_NT_HEADERS32.OptionalHeader.ImageBase;
                 IMAGE_DATA_DIRECTORYS = new List<_IMAGE_DATA_DIRECTORY>(Convert.ToInt32(IMAGE_NT_HEADERS32.OptionalHeader.NumberOfRvaAndSizes));
                 for (int i = 0; i < IMAGE_NT_HEADERS32.OptionalHeader.NumberOfRvaAndSizes; i++)
                 {
@@ -87,6 +89,7 @@ namespace AnalysisLibrary
             }
             else if (IsHDR64)
             {
+                imageBaseOffset = IMAGE_NT_HEADERS64.OptionalHeader.ImageBase;
                 IMAGE_DATA_DIRECTORYS = new List<_IMAGE_DATA_DIRECTORY>(Convert.ToInt32(IMAGE_NT_HEADERS32.OptionalHeader.NumberOfRvaAndSizes));
                 for (int i = 0; i < IMAGE_NT_HEADERS64.OptionalHeader.NumberOfRvaAndSizes; i++)
                 {
@@ -133,7 +136,7 @@ namespace AnalysisLibrary
                     RVAAddressOfFunctions = IMAGE_EXPORT_DIRECTORY_LIST.FunctionsAddressList[Convert.ToUInt32(IMAGE_EXPORT_DIRECTORY_LIST.NameOrdinalsList[i])],
                     RVAAddressOfNames = IMAGE_EXPORT_DIRECTORY_LIST.NameAddressList[i],
                     RVAAddressOfNameOrdinals = IMAGE_EXPORT_DIRECTORY_LIST.NameOrdinalsList[i],
-                    AddressOfFunctions = IMAGE_EXPORT_DIRECTORY_LIST.FunctionsAddressList[Convert.ToUInt32(IMAGE_EXPORT_DIRECTORY_LIST.NameOrdinalsList[i])] - ExportSectionInfo.VirtualAddress + ExportSectionInfo.PointerToRawData,
+                    AddressOfFunctions = IMAGE_EXPORT_DIRECTORY_LIST.FunctionsAddressList[Convert.ToUInt32(IMAGE_EXPORT_DIRECTORY_LIST.NameOrdinalsList[i])] + imageBaseOffset,
                     AddressOfNames = IMAGE_EXPORT_DIRECTORY_LIST.NameAddressList[i] - ExportSectionInfo.VirtualAddress + ExportSectionInfo.PointerToRawData,
                     AddressOfNameOrdinals = IMAGE_EXPORT_DIRECTORY_LIST.NameOrdinalsList[i],
                     FunctionName = Helper.ReadString(_imageDataStream, Convert.ToInt32(IMAGE_EXPORT_DIRECTORY_LIST.NameAddressList[i] - ExportSectionInfo.VirtualAddress + ExportSectionInfo.PointerToRawData))

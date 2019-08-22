@@ -114,7 +114,7 @@ namespace AnalysisLibrary
             public uint SizeOfUninitializedData;
             public uint AddressOfEntryPoint;
             public uint BaseOfCode;
-            public Int64 ImageBase;
+            public UInt64 ImageBase;
             public uint SectionAlignment;
             public uint FileAlignment;
             public ushort MajorOperatingSystemVersion;
@@ -129,10 +129,10 @@ namespace AnalysisLibrary
             public uint CheckSum;
             public ushort Subsystem;
             public ushort DllCharacteristics;
-            public Int64 SizeOfStackReserve;
-            public Int64 SizeOfStackCommit;
-            public Int64 SizeOfHeapReserve;
-            public Int64 SizeOfHeapCommit;
+            public UInt64 SizeOfStackReserve;
+            public UInt64 SizeOfStackCommit;
+            public UInt64 SizeOfHeapReserve;
+            public UInt64 SizeOfHeapCommit;
             public uint LoaderFlags;
             public uint NumberOfRvaAndSizes;
         }
@@ -196,12 +196,12 @@ namespace AnalysisLibrary
         public struct _EXPORT_FUNCTION
         {
             public uint Ordinal;
-            public uint RVAAddressOfFunctions;
-            public uint RVAAddressOfNames;
-            public uint RVAAddressOfNameOrdinals;
-            public uint AddressOfFunctions;
-            public uint AddressOfNames;
-            public uint AddressOfNameOrdinals;
+            public UInt64 RVAAddressOfFunctions;
+            public UInt64 RVAAddressOfNames;
+            public UInt64 RVAAddressOfNameOrdinals;
+            public UInt64 AddressOfFunctions;
+            public UInt64 AddressOfNames;
+            public UInt64 AddressOfNameOrdinals;
             public string FunctionName;
 
         }
